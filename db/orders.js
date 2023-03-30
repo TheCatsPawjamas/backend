@@ -3,8 +3,8 @@ const {client} = require("./client");
 async function createOrders({userId, creditCardName, creditCard, creditCardExpirationDate, creditCardCVC, status}){
     try {
         const {rows} = await client.query(`
-        INSERT INTO routines("userId", "creditCardName, creditCard, creditCardExpirationDate, creditCardCVC, Status)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO routines("userId", "creditCardName", "creditCard", "creditCardExpirationDate", "creditCardCVC", status)
+        VALUES ($1, $2, $3, $4, $5, $6)
         ON CONFLICT (name) DO NOTHING
         RETURNING *;
         `, [userId, creditCardName, creditCard, creditCardExpirationDate, creditCardCVC, status])
@@ -19,7 +19,7 @@ async function createOrders({userId, creditCardName, creditCard, creditCardExpir
 async function getOrders() {
     try {
         const {rows} = await client.query(`
-        SELECT * FROM routines;
+        SELECT * FROM orders;
         `)
 
         return rows;
