@@ -79,7 +79,7 @@ async function createInitialUsers() {
     console.log("Starting to create users...")
     try {
       const usersToCreate = [
-        { username: "albert", password: "bertie99", email: "albert123@gmail.com" },
+        { username: "albert", password: "bertie99", email: "albert123@gmail.com", admin: false },
         { username: "sandra", password: "sandra123", email: "sandra456@hotmail.com" },
         { username: "glamgal", password: "glamgal123", email: "glamgaloo@yahoo.com" },
       ]
