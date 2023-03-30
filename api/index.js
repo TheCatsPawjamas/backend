@@ -61,11 +61,15 @@ apiRouter.use((req,res,next) =>{
 });
 
 
-// const usersRouter = require('./users');
+const usersRouter = require('./users');
+const catsRouter = require('./cats');
+// const ordersRouter = require('./orders');
+// const purchasesRouter = require('./purchases');
 
-
-// apiRouter.use('/users', usersRouter);
-
+apiRouter.use('/users', usersRouter);
+apiRouter.use('/cats', catsRouter);
+// apiRouter.use('/orders', ordersRouter);
+// apiRouter.use('/purchases', purchasesRouter);
 
 apiRouter.use((error,req,res,next)=>{
     res.send({
