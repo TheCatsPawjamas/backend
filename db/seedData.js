@@ -42,7 +42,7 @@ async function createTables(){
                 "userId" INT REFERENCES users(id),
                 "creditCardName" VARCHAR(255) NOT NULL,
                 "creditCard" VARCHAR(255) UNIQUE NOT NULL,
-                "creditCardExprDate" VARCHAR(255) NOT NULL,
+                "creditCardExpirationDate" VARCHAR(255) NOT NULL,
                 "creditCardCVC" VARCHAR(4) NOT NULL,
                 status VARCHAR(255) DEFAULT 'pending'
             
@@ -52,10 +52,10 @@ async function createTables(){
                 name VARCHAR(255) DEFAULT 'Sir. Pounce',
                 breed VARCHAR(255),
                 age VARCHAR(255) NOT NULL,
-                temperment VARCHAR(255),
+                temperament VARCHAR(255),
                 outdoor BOOLEAN DEFAULT false,
                 "adoptionFee" INT DEFAULT 100,
-                "imageURL" TEXT NOT NULL
+                "imageURL" TEXT
             );
             CREATE TABLE purchases(
                 id SERIAL PRIMARY KEY,
@@ -79,9 +79,9 @@ async function createInitialUsers() {
     console.log("Starting to create users...")
     try {
       const usersToCreate = [
-        { username: "albert", password: "bertie99", email: "albert123@gmail.com", admin: false },
-        { username: "sandra", password: "sandra123", email: "sandra456@hotmail.com" },
-        { username: "glamgal", password: "glamgal123", email: "glamgaloo@yahoo.com" },
+        { username: "albert", password: "bertie99", email: "albert123@gmail.com", admin: true },
+        { username: "sandra", password: "sandra123", email: "sandra456@hotmail.com", admin: false },
+        { username: "glamgal", password: "glamgal123", email: "glamgaloo@yahoo.com", admin: false },
       ]
       const users = await Promise.all(usersToCreate.map(createUser))
   
@@ -105,7 +105,7 @@ async function createInitialUsers() {
             temperament: "Sassy and Energetic",
             outdoor: false,
             adoptionFee: 500,
-            imageUrl: ""
+            imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Sphynx_body_7.jpg?itok=dlFrsTiE"
         },
         {
             name: "Puss in Boots",
@@ -114,16 +114,16 @@ async function createInitialUsers() {
             temperament: "Proud and Honorable",
             outdoor: true,
             adoptionFee: 10000,
-            imageUrl: ""
+            imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC_noi0uPIq1iPf2668hGsqvl8kBh-_9ayIw&usqp=CAU"
         },
         {
             name: "Biscuit",
-            breed: "American longhair",
+            breed: "American shorthair",
             age: "10",
             temperament: "Smart and Independent",
             outdoor: false,
             adoptionFee: 200,
-            imageUrl: ""
+            imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/AmericanShorthair_body_6.jpg?itok=rcOrp-IF"
         },
         { 
             name: "Henry",
@@ -132,7 +132,7 @@ async function createInitialUsers() {
             temperament: "Fuzzy and Playful",
             outdoor: false,
             adoptionFee: 350,
-            imageUrl: ""
+            imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Munchkin.jpg?itok=lSFfht9e"
         },
         {
             name: "Annie",
@@ -141,13 +141,13 @@ async function createInitialUsers() {
             temperament: "Cuddly and Playful",
             outdoor: false,
             adoptionFee: 600,
-            imageUrl: ""   
+            imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Ragdoll_240x240%20%281%29.jpg?itok=NuWXBB9T"   
         }
 
       ]
       const cats = await Promise.all(catsToCreate.map(createCats))
   
-      console.log("Catss created:")
+      console.log("Cats created:")
       console.log(cats)
   
       console.log("Finished creating cats!")
