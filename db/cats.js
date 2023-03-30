@@ -1,13 +1,13 @@
 const {client} = require("./client");
 
-async function createCats({name, breed, age, temperment, outdoor, adoption, imageURL}) {
+async function createCats({name, breed, age, temperment, outdoor, adoptionFee, imageURL}) {
     try {
         const {rows} = await client.query(`
-        INSERT INTO activities(name, breed, age, temperment, outdoor, adoption, "imageURL")
+        INSERT INTO cats(name, breed, age, temperment, outdoor, adoptionFee, "imageURL")
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         ON CONFLICT (name) DO NOTHING
         RETURNING *;
-        `,[name, breed, age, temperment, outdoor, adoption, imageURL]);
+        `,[name, breed, age, temperment, outdoor, adoptionFee, imageURL]);
 
         return rows;
     } catch (error) {
@@ -15,7 +15,7 @@ async function createCats({name, breed, age, temperment, outdoor, adoption, imag
     }
 }
 
-async function getCats() {
+async function getAllCats() {
     try {
         const {rows} = await client.query(`
         SELECT * FROM cats;
@@ -28,5 +28,5 @@ async function getCats() {
 }
 
 module.exports = {
-   createCats, getCats
+   createCats, getAllCats
 }
