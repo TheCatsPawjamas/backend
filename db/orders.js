@@ -10,7 +10,13 @@ async function createOrders({
     status}){
     try {
         const {rows} = await client.query(`
-        INSERT INTO orders("userId", "creditCardName", "creditCard", "creditCardExpirationDate", "creditCardCVC", status)
+        INSERT INTO orders(
+            "userId",
+            "creditCardName", 
+            "creditCard", 
+            "creditCardExpirationDate", 
+            "creditCardCVC", 
+            status)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;
         `, [userId, creditCardName, creditCard, creditCardExpirationDate, creditCardCVC, status])
@@ -137,9 +143,6 @@ async function destroyOrders(id) {
         console.log(error)
     }
 }
-
-
-
 
 module.exports = {
     createOrders, 
