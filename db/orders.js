@@ -1,4 +1,5 @@
-const {client} = require("pg")
+const {client} = require("./client")
+// push later on
 
 async function createOrders({
     userId, 
