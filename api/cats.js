@@ -3,6 +3,7 @@ const { requireUser } = require('./utils');
 const { createCats } = require("../db/index"); 
 const { getAllCats } = require("../db/index");
 const { deleteCatById } = require("../db/index");
+const { getCatById } = require("../db/index");
 
 const cats = express.Router();
   
@@ -18,6 +19,22 @@ cats.get('/', async (req, res) => {
         console.log(error)
     }
 })
+
+// GET /api/cats/:catId
+cats.get('/:catId', async (req, res) => {
+  try {
+    const id = req.params.catId;
+    const cat = await getCatById(id);
+    if (!cat) {
+      res.status(404).json({ message: `Cat with id ${id} not found` });
+    } else {
+      res.json(cat);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 
 // POST /api/cats
@@ -36,7 +53,7 @@ cats.post('/cats', async (req, res) => {
 // PATCH /api/cats/:catId
 cats.patch('/cats/:catId', async (req, res) => {
     try {
-      const id = req.params.id;
+      const id = req.params.catId;
       const { name, breed, age, temperament, outdoor, adoptionFee, imageURL } = req.body;
       const updatedCat = await updateActivity({ id, name, breed, age, temperament, outdoor, adoptionFee, imageURL });
       if (updatedCat.length === 0) {

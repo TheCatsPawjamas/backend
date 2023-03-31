@@ -15,6 +15,7 @@ async function createCats({name, breed, age, temperament, outdoor, adoptionFee, 
     }
 }
 
+
 async function getAllCats() {
     try {
         const {rows} = await client.query(`
@@ -27,6 +28,18 @@ async function getAllCats() {
     }
 }
 
+async function getCatById(id){
+    try {
+        const {rows: [cat] } =  await client.query(`
+        SELECT * FROM cats
+        WHERE id = $1;
+        `,[id])
+
+        return cat;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 async function deleteCatById(id) {
     try {
@@ -39,5 +52,5 @@ async function deleteCatById(id) {
   }
 
 module.exports = {
-   createCats, getAllCats, deleteCatById
+   createCats, getAllCats, getCatById, deleteCatById
 }
