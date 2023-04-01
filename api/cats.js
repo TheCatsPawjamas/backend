@@ -1,9 +1,10 @@
 const express = require('express');
 const { requireUser } = require('./utils');
-const { createCats } = require("../db/index"); 
+const { createCats, updateCat } = require("../db/index"); 
 const { getAllCats } = require("../db/index");
 const { deleteCatById } = require("../db/index");
 const { getCatById } = require("../db/index");
+const { updateCat } = require("../db/index");
 
 const cats = express.Router();
   
@@ -55,7 +56,7 @@ cats.patch('/cats/:catId', async (req, res) => {
     try {
       const id = req.params.catId;
       const { name, breed, age, temperament, outdoor, adoptionFee, imageURL } = req.body;
-      const updatedCat = await updateActivity({ id, name, breed, age, temperament, outdoor, adoptionFee, imageURL });
+      const updatedCat = await updateCat({ id, name, breed, age, temperament, outdoor, adoptionFee, imageURL });
       if (updatedCat.length === 0) {
         res.status(404).json({ message: `Cat with id ${id} not found` });
       } else {
