@@ -4,7 +4,6 @@ const { createCats, updateCat } = require("../db/index");
 const { getAllCats } = require("../db/index");
 const { deleteCatById } = require("../db/index");
 const { getCatById } = require("../db/index");
-const { updateCat } = require("../db/index");
 
 const cats = express.Router();
   
@@ -39,7 +38,7 @@ cats.get('/:catId', async (req, res) => {
 
 
 // POST /api/cats
-cats.post('/cats', async (req, res) => {
+cats.post('/', async (req, res) => {
     try {
       const { name, breed, age, temperament, outdoor, adoptionFee, imageURL } = req.body;
       const newCat = await createCats({ name, breed, age, temperament, outdoor, adoptionFee, imageURL });
@@ -52,7 +51,7 @@ cats.post('/cats', async (req, res) => {
   
 
 // PATCH /api/cats/:catId
-cats.patch('/:catId', requireUser,async (req, res, next) => {
+cats.patch('/:catId',requireUser,async (req, res, next) => {
     const id = req.params.catId;
     const { name, breed, age, temperament, outdoor, adoptionFee, imageURL  } = req.body;
     console.log(id);
@@ -104,10 +103,11 @@ cats.patch('/:catId', requireUser,async (req, res, next) => {
 
 
 // DELETE /api/cats/:catId
-cats.delete('/cats/:catId', requireUser, async (req, res) => {
+cats.delete('/:catId', requireUser,async (req, res) => {
     try {
       const id = req.params.catId;
       const deletedCat = await deleteCatById(id);
+      console.log(deletedCat);
       if (deletedCat === 0) {
         res.status(404).json({ message: `Cat with id ${id} not found` });
       } else {
