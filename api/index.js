@@ -66,7 +66,7 @@ const cats = require('./cats');
 // const ordersRouter = require('./orders');
 // const purchasesRouter = require('./purchases');
 
-// apiRouter.use('/users', userRouter);
+apiRouter.use('/users', userRouter);
 apiRouter.use('/cats', cats);
 // apiRouter.use('/orders', ordersRouter);
 // apiRouter.use('/purchases', purchasesRouter);
