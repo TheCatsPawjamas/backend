@@ -52,21 +52,55 @@ cats.post('/cats', async (req, res) => {
   
 
 // PATCH /api/cats/:catId
-cats.patch('/cats/:catId', async (req, res) => {
-    try {
-      const id = req.params.catId;
-      const { name, breed, age, temperament, outdoor, adoptionFee, imageURL } = req.body;
-      const updatedCat = await updateCat({ id, name, breed, age, temperament, outdoor, adoptionFee, imageURL });
-      if (updatedCat.length === 0) {
-        res.status(404).json({ message: `Cat with id ${id} not found` });
-      } else {
-        res.json(updatedCat[0]);
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Internal server error' });
+cats.patch('/:catId', requireUser,async (req, res, next) => {
+    const id = req.params.catId;
+    const { name, breed, age, temperament, outdoor, adoptionFee, imageURL  } = req.body;
+    console.log(id);
+    const user = req.user;
+    if(user){
+        const updateFields = {};
+
+        if (name) {
+            updateFields.name = name;
+        }
+        if (breed) {
+            updateFields.breed = breed;
+        }
+        if (age) {
+          updateFields.age = age;
+        }
+        if (temperament) {
+          updateFields.temperament = temperament;
+        }
+        if (outdoor) {
+          updateFields.outdoor = outdoor;
+        }
+        if (adoptionFee) {
+          updateFields.adoptionFee = adoptionFee;
+        }
+        if (imageURL) {
+          updateFields.imageURL = imageURL;
+        }
+        try {
+            console.log(updateFields);
+            const updatedCat = await updateCat({id, fields: updateFields});
+            console.log("done");
+            res.send(updatedCat);
+        } catch ({ name, message }) {
+            next({ name, message });
+        }
+    }else{
+        res.send({
+            success : false,
+            error : {
+                name: 'WrongUser',
+                message : 'You need to be logged in to update this activity'
+            },
+            data : null
+        })
     }
-  });
+
+});
 
 
 // DELETE /api/cats/:catId
