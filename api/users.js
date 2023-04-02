@@ -13,7 +13,8 @@ const {
 
 userRouter.post("/register", async (req, res) => {
     try {
-        const userExists = await getUserByUsername(username)
+        const {username, password, email} = req.body
+        const userExists = await getUserByUsername({username, email})
 
         if (userExists) {
             return res.status(409).json({
@@ -31,7 +32,7 @@ userRouter.post("/register", async (req, res) => {
         // }
 
         console.log("creating user:" + username + " " + password)
-        const user = await createUser ({ username, password});
+        const user = await createUser ({ username, password, email});
         console.log("created user", user)
 
         const id = user.id
@@ -51,39 +52,38 @@ userRouter.post("/register", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
     const {username, password} = req.body;
-
-    if (!username || !password) {
-        res.send({
-          message: "please provide both username and password or register for a new account"
-        })
-    }
+    
+    const user = await getUserByUsername(username)
     try {
-        const user = await getUser ({username, password});
         console.log(user)
 
-      if (user && user.password == password) {
+        
+      if (user) {
+            const samePasswords = await bcrypt.compare(password, user.password);
+        if (samePasswords) {
         const {id} = user
         const token = jwt.sign({username, id}, process.env.JWT_SECRET);
         res.send({ 
             message: "you're logged in!", token 
         });
       }
+    }
     } catch (error) {
         res.send(error).status(500)
     }
 })
 
-userRouter.get("/me", async (req, res) => {
-    const {username, id} = req.body
-    console.log(username)
-    console.log(id)
+// userRouter.get("/me", async (req, res) => {
+//     const {username, id} = req.body
+//     console.log(username)
+//     console.log(id)
 
-    try { 
-        res.send({username, id})
-    } catch (error) {
-        res.send(error).status(505)
-    }
-})
+//     try { 
+//         res.send({username, id})
+//     } catch (error) {
+//         res.send(error).status(505)
+//     }
+// })
 
 userRouter.get("/:username/purchases", async (req, res) => {
     const {username} = req.params 
@@ -106,4 +106,4 @@ userRouter.get("/:username/purchases", async (req, res) => {
     }
 })
 
-module.exports = {userRouter}
+module.exports = userRouter
