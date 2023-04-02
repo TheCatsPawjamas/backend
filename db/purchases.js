@@ -18,7 +18,6 @@ async function addCatsToOrders({
     }
 }
 
-async 
 
 module.exports = addCatsToOrders
 

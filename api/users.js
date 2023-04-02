@@ -2,6 +2,7 @@ const express = require('express')
 const userRouter = express.Router();
 const jwt = require('jsonwebtoken')
 require('dotenv').config(); 
+const bcrypt = require('bcrypt');
 
 const {
     createUser,
@@ -21,6 +22,7 @@ userRouter.post("/register", async (req, res) => {
                 message: "Username already exists, please try again "
             })
         }
+        console.log(req.body);
         // if (password.length < 8) {
         //     return res.status(400).json({
         //       message: "Password must be at least 8 characters"
@@ -52,22 +54,19 @@ userRouter.post("/register", async (req, res) => {
 
 userRouter.post("/login", async (req, res) => {
     const {username, password} = req.body;
-    
     const user = await getUserByUsername(username)
     try {
         console.log(user)
-
-        
-      if (user) {
+        if (user) {
             const samePasswords = await bcrypt.compare(password, user.password);
-        if (samePasswords) {
-        const {id} = user
-        const token = jwt.sign({username, id}, process.env.JWT_SECRET);
-        res.send({ 
-            message: "you're logged in!", token 
-        });
-      }
-    }
+            if (samePasswords) {
+                const {id} = user
+                const token = jwt.sign({username, id}, process.env.JWT_SECRET);
+                res.send({ 
+                    message: "you're logged in!", token 
+                });
+            }
+        }
     } catch (error) {
         res.send(error).status(500)
     }
