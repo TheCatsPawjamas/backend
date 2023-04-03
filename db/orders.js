@@ -94,6 +94,34 @@ async function getAllOrdersByUser(id) {
 }
 
 // getAllPendingOrdersByUser
+//getAllPurchasesByUser in purchases
+
+// async function attachActivitiesToRoutines(routines) {
+//     try {
+//         console.log(routines)
+//         const {rows} = await client.query(`
+//             SELECT * from activities
+//             JOIN "RoutineActivities"
+//             ON activities.id = "RoutineActivities"."activityId";
+//         `);
+//         console.log("This is routines in attachActivitiesToRoutines function");
+//         console.log(routines)
+//         for(let i=0; i<routines.length; i++){
+//             let answer = rows.filter((singleActivity)=>{
+//                 if(singleActivity.routineId == routines[i].id){
+//                     return true;
+//                 }else{
+//                     return false;
+//                 }
+//             })
+//             routines[i].activities = answer;
+//         }
+//         return routines;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+
 
 // getAllPendigOrdersByCats
 
@@ -143,6 +171,12 @@ async function destroyOrders(id) {
         console.log(error)
     }
 }
+//submitOrder function to take in a userId and make their order status=submitted, 
+//creates a new order for them with status=pending
+//getuserbyId
+
+//delete a purchase
+//maybe: update a purchase
 
 module.exports = {
     createOrders, 
