@@ -1,4 +1,5 @@
-const {client} = require("./client")
+const {client} = require("./client");
+const { getUserById } = require("./users");
 // push later on
 
 async function createOrders({
@@ -43,7 +44,7 @@ async function getOrdersById(id) {
     try {
         const { rows: [orders] } = await client.query(`
         SELECT orders.* FROM orders
-        WHERE orders.id =$1
+        WHERE orders.id =$1;
         `[id])
 
         if (!orders) return undefined
@@ -61,20 +62,20 @@ async function getOrdersById(id) {
     }
 }
 
-async function getAllOrders() {
-    try{
-        const {rows: ids} = await client.queary(`
-        SELECT id FROM orders;
-        `)
+// async function getAllOrders() {
+//     try{
+//         const {rows: ids} = await client.queary(`
+//         SELECT id FROM orders;
+//         `)
 
-        const orders = await Promise.all(ids.map(
-            orders => getOrdersById(orders.id)
-        ))
-        return 
-    } catch {
-        console.log(error)
-    }
-}
+//         const orders = await Promise.all(ids.map(
+//             orders => getOrdersById(orders.id)
+//         ))
+//         return 
+//     } catch {
+//         console.log(error)
+//     }
+// }
 // what about getAllPendingOrders() 
 
 async function getAllOrdersByUser(id) {
@@ -96,6 +97,7 @@ async function getAllOrdersByUser(id) {
 // getAllPendingOrdersByUser
 //getAllPurchasesByUser in purchases
 
+//helper function:
 // async function attachActivitiesToRoutines(routines) {
 //     try {
 //         console.log(routines)
@@ -126,27 +128,24 @@ async function getAllOrdersByUser(id) {
 // getAllPendigOrdersByCats
 
 // if we have an error - use talal's code 
-async function updateOrders ({userId, creditCardName, creditCard, creditCardExpirationDate, creditCardCVC, status}){
-    try {
-        const {rows} = await client.query(`
-        UPDATE orders
-        SET "creditCardName" = $1, 
-        "creditCard" = $2, 
-        "creditCardExpirationDate" = $3, 
-        "creditCardCVC" = $4, 
-        "creditCardCVC" = $5, 
-        status = $6
-        WHERE userId = ${userId}
-        RETURNING *;
-        `,[
-        userId, 
-        creditCardName, 
-        creditCard, 
-        creditCardExpirationDate, 
-        creditCardCVC, 
-        status])
+async function updateOrders ({id, fields = {}}){
+    
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
 
-        return rows;
+    if(setString.length ===0){
+        return
+    }
+    try {
+        const {rows: [order]} = await client.query(`
+        UPDATE orders
+        SET ${setString}
+        WHERE id = ${id}
+        RETURNING *;
+        `,Object.values(fields))
+
+        return order;
     } catch (error) {
         console.log(error)
     }
@@ -157,14 +156,14 @@ async function destroyOrders(id) {
         const destroyOrders = await getOrdersById(id) 
 
         await client.query(`
-        DELETE FROM orders
-        WHERE id = $1;
-        `[id])
-
-        client.query(`
         DELETE FROM purchases
         WHERE "orderId" = $1
         `,[id])
+
+        await client.query(`
+        DELETE FROM orders
+        WHERE id = $1;
+        `[id])
 
         return destroyOrders;
     } catch (error) {
@@ -174,15 +173,88 @@ async function destroyOrders(id) {
 //submitOrder function to take in a userId and make their order status=submitted, 
 //creates a new order for them with status=pending
 //getuserbyId
+// async function addCreditCardInformation({id, fields = {}}){
+//     try {
+        
+//     } catch (error) {
+        
+//     }
+// }
 
-//delete a purchase
-//maybe: update a purchase
+
+//finish an order => 
+    //update order and set status to submitted, 
+    //make a new order for that user
+
+//helper function
+async function getOrderByUserId(userId){
+    try {
+        const {rows} = await client.query(`
+            SELECT * from orders
+            WHERE "userId" = $1;
+        `,[userId]);
+        
+       if(rows.length == 1)
+       {
+        return rows[0];
+       }
+       else if(rows)
+       {
+        return rows;
+       }
+       else
+       {
+        return undefined;
+       }
+        
+       
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+async function finishOrder(userId){
+
+    try {
+        // const user= await getUserById(userId);
+        const order = await getOrderByUserId(userId);
+
+        const {rows} = await client.query(`
+            UPDATE orders
+            SET status='submitted'
+            WHERE "userId"=$1
+            RETURNING *;
+        `,[userId]);
+
+        if(rows.length){
+            await client.query(`
+                INSERT INTO orders("userId")
+                VALUES ($1)
+                RETURNING *;
+            `,[userId]);
+
+        }else{
+            return "Failed to Submit Order";
+        }
+        //
+        return order;
+        //update order ->pending to submitted
+        //make a new order for that user
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
 module.exports = {
     createOrders, 
     getOrders,
-    getAllOrders,
+    // getAllOrders,
     getAllOrdersByUser,
     updateOrders,
-    destroyOrders
+    destroyOrders,
+    getOrderByUserId,
+    finishOrder,
 }

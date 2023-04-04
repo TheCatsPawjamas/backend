@@ -162,7 +162,7 @@ async function createInitialUsers() {
   
     const ordersToCreate = [
       {
-        userId: 1,
+        userId: 2,
         creditCardName: "Albert Bertie",
         creditCard: "123456789012345",
         creditCardExpirationDate: "01/25",
@@ -171,7 +171,7 @@ async function createInitialUsers() {
         
       },
       {
-        userId: 2,
+        userId: 1,
         creditCardName: "Sandra Bullock",
         creditCard: "39053290581903",
         creditCardExpirationDate: "10/23",
@@ -179,7 +179,7 @@ async function createInitialUsers() {
         status: "pending"
       },
       {
-        userId: 1,
+        userId: 3,
         creditCardName: "Glamgal Gabagool",
         creditCard: "23701748701247",
         creditCardExpirationDate: "04/26",
