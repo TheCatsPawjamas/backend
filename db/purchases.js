@@ -18,7 +18,7 @@ async function addCatsToOrders({
     }
 }
 
-// in order to build the delete function, I need to first get the purchaseById
+// in order to build the delete function, acquire purchaseById
 async function getPurchasesById(id){ 
     try {
         const {rows: []} = await client.query(`
@@ -38,7 +38,6 @@ async function deletePurchases(id) {
         const removePurchase = await getPurchasesById(id)
 
         client.query(`
-        
         DELETE FROM "purchases"
         WHERE id = ${id}
         `)
@@ -72,5 +71,4 @@ module.exports = {
     deletePurchases, 
     updatePurchases
 }
-
 
