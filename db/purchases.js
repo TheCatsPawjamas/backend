@@ -21,12 +21,12 @@ async function addCatsToOrders({
 // in order to build the delete function, acquire purchaseById
 async function getPurchasesById(id){ 
     try {
-        const {rows: []} = await client.query(`
+        const {rows} = await client.query(`
         SELECT * FROM "purchases"
         WHERE id = $1 
         `[id])
 
-        return 
+        return rows
     } catch (error) {
         console.log(error)
     }
@@ -48,18 +48,20 @@ async function deletePurchases(id) {
 }
 
 //update purchase - way not need this
-async function updatePurchases({ id, creditCardName, creditCard, creditCardCVC, creditCardExpirationDate}) {
+async function updatePurchases({ id, fields={}}) {
+    const string = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+    ).join(', ');
+
     try { 
-        const {rows: []} = await client.query(`
+        const {rows: [purchases]} = await client.query(`
         UPDATE "purchases"
-        SET 
-        creditCardName = $1
-        creditCard = $2
-        creditCardCVC = $3 
-        creditCardExpirationDate = $4
+        SET ${ string }
         WHERE id = ${id}
         RETURNING *; 
-        `[creditCardName, creditCard, creditCardCVC, creditCardExpirationDate]) 
+        `, Object.values(fields)) 
+
+        return purchases
     } catch (error) {
         console.log(error)
     }

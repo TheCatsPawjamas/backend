@@ -25,25 +25,19 @@ purchasesRouter.get("/:id", async (req, res) => {
 
 purchasesRouter.patch("/:id", async (req, res) => {
     const {id} = req.params.id 
-    const { creditCardName, creditCard, creditCardCVC, creditCardExpirationDate} = req.body
+    const { catId, adoptionFee} = req.body
 
     const user = await getUserById(id)
     if (user) {
         let updateFields = {};
-        if (creditCardName) {
-            updateFields.creditCardName = creditCardName
+        if (catId) {
+            updateFields.catId = catId
         }
-        if (creditCard) {
-            updateFields.creditCard = creditCard
+        if (adoptionFee) {
+            updateFields.adoptionFee = adoptionFee
         }
-        if (creditCardCVC) {
-            updateFields.creditCardCVC = creditCardCVC
-        } 
-        if (creditCardExpirationDate) {
-            updateFields.creditCardExpirationDate = creditCardExpirationDate
-        } 
         try {
-            const updatedPurchase = await updatedPurchases({fields: updateFields});
+            const updatedPurchase = await updatePurchases({id, fields: updateFields});
             console.log("starting to update purchase")
             res.send(updatedPurchase).status(200)
         } catch (error) {
@@ -59,29 +53,6 @@ purchasesRouter.patch("/:id", async (req, res) => {
         })
     }
 })
-
-// try { 
-//     const newUpdatedPurchases = await updatePurchases({
-//         id, 
-//         creditCardName, 
-//         creditCard, 
-//         creditCardCVC, 
-//         creditCardExpirationDate
-//     })
-
-//     if(newUpdatedPurchases.length == 0) {
-//         res.status(404).json({ 
-//             message: `Purchase with that id ${id} was not found` 
-//         });
-//     } else {
-//         res.json(newUpdatedPurchases[0])
-//     }
-// } catch (error) {
-//     console.log(error)
-//     res.status(500).json({
-//         message: "Internal Server Error"
-//     })
-// }
 
 purchasesRouter.delete("/:id", async (req, res) => {
     const id = req.params 
