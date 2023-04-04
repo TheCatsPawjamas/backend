@@ -11,7 +11,7 @@ const { getUserById } = require("../db/users");
 const purchasesRouter = express.Router();
 
 purchasesRouter.get("/:id", async (req, res) => {
-    const id = req.body.id 
+    const id = req.params.id 
     const purchases = await getPurchasesById(id)
 
     if (!purchases) {
@@ -24,9 +24,10 @@ purchasesRouter.get("/:id", async (req, res) => {
 })
 
 purchasesRouter.patch("/:id", async (req, res) => {
-    const {id} = req.params.id 
+    const id = req.params.id 
     const { catId, adoptionFee} = req.body
 
+    console.log(id);
     const user = await getUserById(id)
     if (user) {
         let updateFields = {};

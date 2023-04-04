@@ -24,9 +24,9 @@ async function getPurchasesById(id){
         const {rows} = await client.query(`
         SELECT * FROM "purchases"
         WHERE id = $1 
-        `[id])
+        `,[id])
 
-        return rows
+        return rows[0]
     } catch (error) {
         console.log(error)
     }
@@ -70,6 +70,7 @@ async function updatePurchases({ id, fields={}}) {
 module.exports = {
     addCatsToOrders,
     deletePurchases, 
-    updatePurchases
+    updatePurchases,
+    getPurchasesById
 }
 
