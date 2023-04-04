@@ -11,7 +11,7 @@ const purchasesRouter = express.Router();
 
 purchasesRouter.get("/:id", async (req, res) => {
     const id = req.body.id 
-    const purchase = await getPurchasesById(id)
+    const purchases = await getPurchasesById(id)
 
     if (!purchases) {
         res.status(404).json({
