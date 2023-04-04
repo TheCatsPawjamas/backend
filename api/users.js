@@ -44,6 +44,8 @@ userRouter.post("/register", async (req, res) => {
         const token = jwt.sign( {username, id} , process.env.JWT_SECRET);
         console.log("token created ", token )
 
+        //create an order for that user
+
         res.send({
             message: "Registration successful",
             token
