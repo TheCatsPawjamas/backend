@@ -73,17 +73,17 @@ userRouter.post("/login", async (req, res) => {
     }
 })
 
-// userRouter.get("/me", async (req, res) => {
-//     const {username, id} = req.body
-//     console.log(username)
-//     console.log(id)
+userRouter.get("/me", async (req, res) => {
+    const {username, id} = req.body
+    console.log(username)
+    console.log(id)
 
-//     try { 
-//         res.send({username, id})
-//     } catch (error) {
-//         res.send(error).status(505)
-//     }
-// })
+    try { 
+        res.send({username, id})
+    } catch (error) {
+        res.send(error).status(505)
+    }
+})
 
 userRouter.get("/:username/purchases", async (req, res) => {
     const {username} = req.params 
@@ -124,7 +124,6 @@ userRouter.patch("/:id", async (req, res) => {
         if (email) {
             const saltCount = 12;
             hashedEmail= await bcrypt.hash(email,saltCount);
-      
           updateFields.email = hashedEmail;
         }
     
