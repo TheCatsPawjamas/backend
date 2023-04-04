@@ -95,7 +95,6 @@ userRouter.get("/:username/purchases", async (req, res) => {
         if (user) {
 
             const userPurchases = await getAllPurchasesByUsers (user)
-                /* NOTES: getAllPurchasesByUsers does not exist in the purchases DB yet */ 
 
             res.send(userPurchases).status(202)
         } else {

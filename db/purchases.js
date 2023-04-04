@@ -36,7 +36,6 @@ async function getPurchasesById(id){
 async function deletePurchases(id) {
     try {
         const removePurchase = await getPurchasesById(id)
-
         client.query(`
         DELETE FROM "purchases"
         WHERE id = ${id}
