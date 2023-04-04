@@ -37,7 +37,7 @@ purchasesRouter.patch("/:id", async (req, res) => {
 
         if(newUpdatedPurchases.length == 0) {
             res.status(404).json({ 
-                message: `Routine Activity with id ${id} not found` 
+                message: `Purchase with that id ${id} was not found` 
             });
         } else {
             res.json(newUpdatedPurchases[0])
