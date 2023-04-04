@@ -22,7 +22,7 @@ purchasesRouter.get("/:id", async (req, res) => {
     }
 })
 
-purchases.patch("/:id", async (req, res) => {
+purchasesRouter.patch("/:id", async (req, res) => {
     const id = req.params.id 
     const { creditCardName, creditCard, creditCardCVC, creditCardExpirationDate} = req.body
 
