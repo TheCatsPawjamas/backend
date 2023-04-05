@@ -58,21 +58,26 @@ async function getOrders() {
 }
 async function getOrdersById(id) {
     try {
-        const { rows: [orders] } = await client.query(`
-        SELECT orders.* FROM orders
-        WHERE orders.id =$1;
-        `[id])
-
-        if (!orders) return undefined
-
-        const {rows: cats} = await client.query(`
-        SELECT cats.* FROM cats
-        JOIN purchases on purchases."catId" = cat.id
-        WHERE purchases."catId" = $1;
+        const { rows: [order] } = await client.query(`
+        SELECT * FROM orders
+        WHERE orders.id=$1;
         `,[id])
 
-        orders.cats = orders
-        return orders
+        console.log("This is the order in the getOrdersById function")
+        console.log(order);
+
+        if (!Object.keys(order).length) return undefined
+
+        const {rows} = await client.query(`
+        SELECT cats.* FROM cats
+        JOIN purchases on purchases."catId" = cats.id
+        WHERE purchases."orderId" = $1;
+        `,[id])
+
+        console.log("This is the rows in that function")
+        console.log(rows);
+        order.cats = rows;
+        return order
     } catch (error) {
         console.log(error)
     }
@@ -94,17 +99,23 @@ async function getOrdersById(id) {
 // }
 // what about getAllPendingOrders() 
 
-async function getAllOrdersByUser(id) {
+async function getAllOrdersByUser(userId) {
     try {
-    const {rows: ids} = await client.queary(`
-    SELECT id FROM orders
-    WHERE "userId" = $1;
-    `[id])
+        console.log("This is the userId in the getAllOrdersByUser functions")
+        console.log(userId);
+        
+        
+    const {rows} = await client.query(`
+    SELECT * FROM orders
+    WHERE "userId"=$1;
+    `[userId]);
 
-    const orders = await Promise.all(ids.map(
-        orders => getOrdersById(orders.id)
-    ))
-    return orders;
+    console.log(rows);
+
+    // const orders = await Promise.all(ids.map(
+    //     orders => getOrdersById(orders.id)
+    // ))
+    return rows;
     } catch (error) {
         console.log(error)
     }
@@ -230,6 +241,23 @@ async function getOrderByUserId(userId){
     }
 }
 
+//new function. test functionality
+async function getEntireCartByUserId(userId){
+    try {
+        const {rows} = await client.query(`
+            SELECT p.id, p."catId", p."orderId", p."adoptionFee"
+            FROM purchases p
+            JOIN orders o ON p."orderId" = o.id
+            WHERE o."userId" = $1;
+        `,[userId]);
+
+        return rows;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 async function finishOrder(userId){
 
     try {
@@ -268,10 +296,11 @@ module.exports = {
     createOrders,
     createNewUserOrder, 
     getOrders,
-    // getAllOrders,
+    getOrdersById,
     getAllOrdersByUser,
     updateOrders,
     destroyOrders,
     getOrderByUserId,
     finishOrder,
+    getEntireCartByUserId,
 }

@@ -1,7 +1,10 @@
 const express = require("express");
-const { getAllOrders, createOrders, updateOrders, destroyOrders, finishOrder } = require("../db/orders");
+const { 
+    getOrdersById,
+    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId } = require("../db/orders");
 
 const ordersRouter = express.Router();
+
 
 const {requireUser} = require('./utils');
 
@@ -12,18 +15,7 @@ const {
     addCatsToOrders
 } = require('../db');
 
-//get all orders- done
-//get your orders - done
-//create an order - done
-//add cats to your orders - done
-//update your order - done
-//MAYBE DO THIS: add credit card information to a user
-    //its done in update your order but maybe needs to be done
-//delete items from your cart - done
-//finish an order => 
-    //update order and set status to submitted, 
-    //make a new order for that user
-
+//gets all orders, this should be an admin function... will work on it for the next code review
 ordersRouter.get('/', async (req, res, next) => {
     try {
         let allOrders = await getOrders();
@@ -34,11 +26,18 @@ ordersRouter.get('/', async (req, res, next) => {
     }
 })
 
-ordersRouter.get('/:id', async (req,res,next)=>{
+//gets your specific order by the id primary key of the orders table AND all the cats associated with that order
+ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
     const id = req.params.id;
     console.log(id);
+    const user = req.user;
+    const userId = user[0].id
+    console.log(user);
+    console.log(userId);
     try {
-        const myOrders = await getAllOrdersByUser(id);
+        const myOrders = await getOrdersById(id);
+        console.log("this is myOrders variable");
+        console.log(myOrders);
         if(myOrders){
             res.send(myOrders).status(200);
         }
@@ -54,35 +53,7 @@ ordersRouter.get('/:id', async (req,res,next)=>{
     }
 })
 
-//user is already assigned an order on account creation, this is redundant.
-// ordersRouter.post('/', requireUser ,async (req, res, next) => {
-//     const { creditCardName, creditCard, creditCardExpirationDate,creditCardCVC } = req.body;
-//     const orderData = {};
-//     const user = req.user;
-//     try{
-//         if(user){
-//             const ordersToCreate = await createOrders({
-//                 creditCardName,
-//                 creditCard,
-//                 creditCardExpirationDate,
-//                 creditCardCVC
-//             });
-    
-//             res.send(
-//                 ordersToCreate
-//             );
-//         }
-//         else{
-//             res.send({
-//                 name: "MissingUserData",
-//                 message: "must be signed in to perform this action"
-//             })
-//         }
-//     } catch ({ name, message }) {
-//         next({ name, message })
-//     } 
-// });
-
+//Adds a cat to a specific order by the orderId, have to input the catId, orderId, and adoptionFee
 ordersRouter.post('/:orderId/cats', async (req, res, next) => {
     const orderId = req.params.orderId;
     const { catId, adoptionFee } = req.body;
@@ -100,6 +71,8 @@ ordersRouter.post('/:orderId/cats', async (req, res, next) => {
     }
 })
 
+//adds credit card information to an order, these variables always default to false...
+//should be used in the payments page on the frontend that Aamna was working on
 ordersRouter.patch('/:id',requireUser, async (req,res,next)=>{
     const id = req.params.id;
     const user = req.user;
@@ -130,32 +103,35 @@ ordersRouter.patch('/:id',requireUser, async (req,res,next)=>{
     }
 })
 
-//no reason to delete an order. delete a cat from an order instead
-ordersRouter.delete('/:orderId/:catId', requireUser, async(req,res,next)=>{
-    const id = req.params.id;
+
+
+//getAllPurchasesByUserId -> get every single order for that user's cart
+//gets all the purchases in the purchases table by a user's Id. outputs catId, orderId, and adoptionFee
+ordersRouter.get('/:userId/cart', requireUser, async(req,res,next)=>{
     const user = req.user;
 
-    //delete from purchases where catId=$1 and orderId=$2;
-
+    const userId = req.body.userId;
+    const id = user[0].id;
     try {
         if(user){
-            const deletedOrder = await destroyOrders(id);
-            res.send(deletedOrder);
-        }else{
-            res.send({
-                name: "MissingUserData",
-                message: "must be signed in to perform this action"
-            });
-        }  
+            const myCart=await getEntireCartByUserId(id);
+            res.send(myCart);
+        }
+
     } catch (error) {
         console.log(error);
         throw error;
     }
+
 })
 
+
+//finish the entire purchase
+//for frontend, don't include a body at all
+//sets the status for a order/cart as submitted and creates a new cart for that user
 ordersRouter.post('/purchase', requireUser, async(req,res,next)=>{
     const user = req.user;
-    const userId = user.id;
+    const userId = user[0].id;
 
     try {
         if(user){
@@ -177,3 +153,4 @@ ordersRouter.post('/purchase', requireUser, async(req,res,next)=>{
 })
 
 
+module.exports = ordersRouter;
