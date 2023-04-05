@@ -55,9 +55,10 @@ purchasesRouter.patch("/:id", async (req, res) => {
     }
 })
 
+//Deletes a cat from a purchase, deletes it from the cart as well.... based on the actual id primary key in the purchases table
 purchasesRouter.delete("/:id", async (req, res) => {
-    const id = req.params 
-
+    const id = req.params.id;
+    console.log(id);
     try {
         const destroyPurchase = await deletePurchases(id)
         res.send({
