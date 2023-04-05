@@ -18,48 +18,52 @@ const {
     createNewUserOrder
 } = require('../db/orders');
 
-userRouter.post("/register", async (req, res) => {
+userRouter.post("/register", async (req, res, next) => {
     try {
         const {username, password, email} = req.body
-        const userExists = await getUserByUsername({username, email})
+        const userExists = await getUserByUsername(username)
+        console.log("userExists");
+        let admin = false;
+        if(req.body.admin){
+            console.log(req.body.admin);
+            admin = true;
+        }
 
-        if (userExists) {
-            return res.status(409).json({
+        console.log(userExists);
+        if (userExists.length) {
+            res.send({
                 message: "Username already exists, please try again "
             })
+        }else{
+            // if (password.length < 8) {
+            //     return res.status(400).json({
+            //       message: "Password must be at least 8 characters"
+            //     });
+            //   } else if (username.length < 8) {
+            //     return res.status(400).json({
+            //       message: "Username must be at least 8 characters"
+            //     });
+            // }
+
+            console.log("creating user:" + username + " " + password)
+            const user = await createUser ({ username, password, email, admin});
+            console.log("created user", user)
+            const ourUser = await getUser({username, password, email});
+
+            const id = user.id;
+
+            const token = jwt.sign( {username, id} , process.env.JWT_SECRET);
+
+            //create an order for that user
+            const status='pending';
+            const userId = ourUser.id;
+            const order = await createNewUserOrder({userId, status});
+            res.send({
+                message: "Registration successful",
+                token
+            });
         }
-        console.log(req.body);
-        // if (password.length < 8) {
-        //     return res.status(400).json({
-        //       message: "Password must be at least 8 characters"
-        //     });
-        //   } else if (username.length < 8) {
-        //     return res.status(400).json({
-        //       message: "Username must be at least 8 characters"
-        //     });
-        // }
 
-        console.log("creating user:" + username + " " + password)
-        const user = await createUser ({ username, password, email});
-        console.log("created user", user)
-        const ourUser = await getUser({username, password, email});
-        // console.log("our id = ");
-        // console.log(ourUser.id);
-
-        const id = user.id;
-
-        // console.log("creating token")
-        const token = jwt.sign( {username, id} , process.env.JWT_SECRET);
-        // console.log("token created ", token )
-
-        //create an order for that user
-        const status='pending';
-        const userId = ourUser.id;
-        const order = await createNewUserOrder({userId, status});
-        res.send({
-            message: "Registration successful",
-            token
-        });
     } catch (error) {
         res.send(error).status(505)
     }
