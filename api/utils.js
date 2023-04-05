@@ -10,10 +10,10 @@ async function requireUser(req, res, next) {
 }
 
 async function requireAdmin(req, res, next) {
-  if (!req.user.admin) {
+  if (!req.user.admin=="true") {
     next({
-      name: "MissingUserError",
-      message: "You must be logged in to perform this action"
+      name: "MissingAdminStatusError",
+      message: "You must be have admin status to perform this action"
     });
   }
 
