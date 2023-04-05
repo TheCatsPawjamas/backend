@@ -13,6 +13,11 @@ const {
     // getAllPurchasesByUsers, // we don't have this function in the purchases db
 } = require("../db/users.js")
 
+const {
+    createOrders,
+    createNewUserOrder
+} = require('../db/orders');
+
 userRouter.post("/register", async (req, res) => {
     try {
         const {username, password, email} = req.body
@@ -37,15 +42,20 @@ userRouter.post("/register", async (req, res) => {
         console.log("creating user:" + username + " " + password)
         const user = await createUser ({ username, password, email});
         console.log("created user", user)
+        const ourUser = await getUser({username, password, email});
+        // console.log("our id = ");
+        // console.log(ourUser.id);
 
-        const id = user.id
+        const id = user.id;
 
-        console.log("creating token")
+        // console.log("creating token")
         const token = jwt.sign( {username, id} , process.env.JWT_SECRET);
-        console.log("token created ", token )
+        // console.log("token created ", token )
 
         //create an order for that user
-
+        const status='pending';
+        const userId = ourUser.id;
+        const order = await createNewUserOrder({userId, status});
         res.send({
             message: "Registration successful",
             token
