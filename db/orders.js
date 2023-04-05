@@ -28,6 +28,22 @@ async function createOrders({
         console.log(error)
     }
 }
+async function createNewUserOrder({userId, status}){
+    try {
+        
+        const {rows} = await client.query(`
+        INSERT INTO orders("userId",status)
+        VALUES ($1, $2)
+        RETURNING *;
+        `, [userId, status])
+
+
+        if (!rows) return undefined 
+        return rows;
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 async function getOrders() {
     try {
@@ -249,7 +265,8 @@ async function finishOrder(userId){
 }
 
 module.exports = {
-    createOrders, 
+    createOrders,
+    createNewUserOrder, 
     getOrders,
     // getAllOrders,
     getAllOrdersByUser,
