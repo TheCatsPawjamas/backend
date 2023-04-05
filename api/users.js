@@ -26,7 +26,12 @@ userRouter.post("/register", async (req, res, next) => {
         let admin = false;
         if(req.body.admin){
             console.log(req.body.admin);
-            admin = true;
+            if(req.body.admin == "true"){
+                admin = true;
+            }else{
+                admin = false;
+            }
+            
         }
 
         console.log(userExists);
