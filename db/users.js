@@ -88,7 +88,7 @@ async function getUserByUsername(userName) {
 
         console.log("rows for getUserByUsername");
         console.log(rows);
-        return rows;
+        return rows[0];
         // if(rows){
         //     return rows[0];
         // }

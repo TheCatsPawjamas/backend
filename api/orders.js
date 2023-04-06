@@ -31,7 +31,7 @@ ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
     const id = req.params.id;
     console.log(id);
     const user = req.user;
-    const userId = user[0].id
+    const userId = user.id
     console.log(user);
     console.log(userId);
     try {
@@ -111,7 +111,7 @@ ordersRouter.get('/:userId/cart', requireUser, async(req,res,next)=>{
     const user = req.user;
 
     const userId = req.body.userId;
-    const id = user[0].id;
+    const id = user.id;
     try {
         if(user){
             const myCart=await getEntireCartByUserId(id);
@@ -131,7 +131,7 @@ ordersRouter.get('/:userId/cart', requireUser, async(req,res,next)=>{
 //sets the status for a order/cart as submitted and creates a new cart for that user
 ordersRouter.post('/purchase', requireUser, async(req,res,next)=>{
     const user = req.user;
-    const userId = user[0].id;
+    const userId = user.id;
 
     try {
         if(user){

@@ -81,6 +81,7 @@ userRouter.post("/login", async (req, res) => {
         console.log(user)
         if (user) {
             const samePasswords = await bcrypt.compare(password, user.password);
+            console.log(samePasswords);
             if (samePasswords) {
                 const {id} = user
                 const token = jwt.sign({username, id}, process.env.JWT_SECRET);
@@ -88,6 +89,10 @@ userRouter.post("/login", async (req, res) => {
                     message: "you're logged in!", token 
                 });
             }
+        }else{
+            res.send({
+                message: "you must have valid credentials to log in"
+            }).status(403);
         }
     } catch (error) {
         res.send(error).status(500)

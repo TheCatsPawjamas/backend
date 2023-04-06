@@ -1,4 +1,5 @@
 const {client} = require("./client");
+const { getPurchasesById } = require("./purchases");
 const { getUserById } = require("./users");
 // push later on
 
@@ -69,7 +70,7 @@ async function getOrdersById(id) {
         if (!Object.keys(order).length) return undefined
 
         const {rows} = await client.query(`
-        SELECT cats.* FROM cats
+        SELECT cats.*, purchases.* FROM cats
         JOIN purchases on purchases."catId" = cats.id
         WHERE purchases."orderId" = $1;
         `,[id])
