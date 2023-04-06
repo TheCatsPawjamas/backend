@@ -4,6 +4,7 @@ const {
     updateOrders, destroyOrders, finishOrder, getEntireCartByUserId } = require("../db/orders");
 
 const ordersRouter = express.Router();
+const bcrypt = require('bcrypt');
 
 
 const {requireUser} = require('./utils');
@@ -78,17 +79,30 @@ ordersRouter.patch('/:id',requireUser, async (req,res,next)=>{
     const user = req.user;
     const { creditCardName, creditCard, creditCardExpirationDate,creditCardCVC } = req.body;
     const orderData = {};
+    let saltCount = 12;
     if(creditCardName){
-        orderData.creditCardName = creditCardName;
+        let hashedCardName = await bcrypt.hash(creditCardName,saltCount)
+        orderData.creditCardName= hashedCardName;
+        // orderData.creditCardName = creditCardName;
     }
     if(creditCard){
-        orderData.creditCard = creditCard;
+        let creditCardString = creditCard.toString();
+        let hashedCardNum = await bcrypt.hash(creditCardString,saltCount);
+        orderData.creditCard = hashedCardNum;
+        // orderData.creditCard = creditCard;
     }
     if(creditCardExpirationDate){
-        orderData.creditCardExpirationDate=creditCardExpirationDate;
+        // let creditCardExpDateString = creditCardExpirationDate.toString
+        let hashedCardDate = await bcrypt.hash(creditCardExpirationDate,saltCount);
+        orderData.creditCardExpirationDate=hashedCardDate;
+        // orderData.creditCardExpirationDate=creditCardExpirationDate;
+
     }
     if(creditCardCVC){
-        orderData.creditCardCVC = creditCardCVC;
+        let creditCardCVCString = creditCardCVC.toString();
+        let hashedCardCVC = await bcrypt.hash(creditCardCVCString,saltCount);
+        orderData.creditCardCVC = hashedCardCVC;
+        // orderData.creditCardCVC = creditCardCVC;
     }
 
     try {
@@ -109,7 +123,6 @@ ordersRouter.patch('/:id',requireUser, async (req,res,next)=>{
 //gets all the purchases in the purchases table by a user's Id. outputs catId, orderId, and adoptionFee
 ordersRouter.get('/:userId/cart', requireUser, async(req,res,next)=>{
     const user = req.user;
-
     const userId = req.body.userId;
     const id = user.id;
     try {

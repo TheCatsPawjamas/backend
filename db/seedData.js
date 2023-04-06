@@ -40,10 +40,10 @@ async function createTables(){
             CREATE TABLE orders(
                 id SERIAL PRIMARY KEY,
                 "userId" INT REFERENCES users(id),
-                "creditCardName" VARCHAR(255),
-                "creditCard" VARCHAR(255) UNIQUE,
-                "creditCardExpirationDate" VARCHAR(255),
-                "creditCardCVC" VARCHAR(4),
+                "creditCardName" TEXT,
+                "creditCard" TEXT UNIQUE,
+                "creditCardExpirationDate" TEXT,
+                "creditCardCVC" TEXT,
                 status VARCHAR(255) DEFAULT 'pending'
             
             );
