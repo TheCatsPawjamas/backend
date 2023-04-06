@@ -79,7 +79,8 @@ async function getUserById(userId) {
 
 async function getUserByUsername(userName) {
     try {
-        console.log("username in getUserByUsername" + userName)
+        console.log("username in getUserByUsername");
+        console.log(userName);
         const {rows} = await client.query(`
             SELECT id, username, password 
             FROM users
