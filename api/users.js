@@ -21,6 +21,7 @@ const {
 userRouter.post("/register", async (req, res, next) => {
     try {
         const {username, password, email} = req.body
+        console.log(username);
         const userExists = await getUserByUsername(username)
         console.log("userExists");
         let admin = false;
@@ -35,7 +36,7 @@ userRouter.post("/register", async (req, res, next) => {
         }
 
         console.log(userExists);
-        if (userExists.length) {
+        if (userExists) {
             res.send({
                 message: "Username already exists, please try again "
             })

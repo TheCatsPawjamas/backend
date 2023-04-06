@@ -26,7 +26,7 @@ ordersRouter.get('/', async (req, res, next) => {
     }
 })
 
-//gets your specific order by the id primary key of the orders table AND all the cats associated with that order
+//gets your specific order by the id primary key of the orders table AND the purchase ID for that cart AND all the cats associated with that order
 ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
     const id = req.params.id;
     console.log(id);
@@ -53,7 +53,7 @@ ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
     }
 })
 
-//Adds a cat to a specific order by the orderId, have to input the catId, orderId, and adoptionFee
+//Adds a cat to a specific order by the orderId, have to input the catId and adoptionFee
 ordersRouter.post('/:orderId/cats', async (req, res, next) => {
     const orderId = req.params.orderId;
     const { catId, adoptionFee } = req.body;
@@ -128,8 +128,8 @@ ordersRouter.get('/:userId/cart', requireUser, async(req,res,next)=>{
 
 //finish the entire purchase
 //for frontend, don't include a body at all
-//sets the status for a order/cart as submitted and creates a new cart for that user
-ordersRouter.post('/purchase', requireUser, async(req,res,next)=>{
+//sets the status for a order/cart as submitted and creates a new cart for that user with a new orderId
+ordersRouter.post('/purchaseComplete', requireUser, async(req,res,next)=>{
     const user = req.user;
     const userId = user.id;
 
