@@ -18,8 +18,8 @@ const {requireUser} = require('./utils')
 const {
     createOrders,
     createNewUserOrder,
-    getOrderByUserId,
-    getPendingOrdersByUser
+    getPendingOrderByUserId,
+    getAllOrdersByUser
 } = require('../db/orders');
 
 userRouter.post("/register", async (req, res, next) => {
@@ -112,8 +112,8 @@ userRouter.get("/me", requireUser, async (req, res) => {
     // console.log(id)
     
     try { 
-        const order = await getPendingOrdersByUser(id)
-        res.send({username, id, orders: order})
+        
+        res.send({username, id})
     } catch (error) {
         res.send(error).status(505)
     }

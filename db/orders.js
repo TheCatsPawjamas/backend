@@ -100,22 +100,16 @@ async function getOrdersById(id) {
 // }
 // what about getAllPendingOrders() 
 
-async function getPendingOrdersByUser(userId) {
+async function getAllOrdersByUser(userId) {
     try {
         console.log("This is the userId in the getAllOrdersByUser functions")
         console.log(userId);
         
         
-    // const {rows} = await client.query(`
-    // SELECT * FROM orders
-    // WHERE "userId"=$1
-    // AND status='pending';
-    // `,[userId]);
-
     const {rows} = await client.query(`
-    SELECT * FROM orders;
-    `);
-
+    SELECT * FROM orders
+    WHERE "userId"=$1;
+    `,[userId]);
 
     console.log(rows);
 
@@ -221,6 +215,38 @@ async function destroyOrders(id) {
     //make a new order for that user
 
 //helper function
+async function getPendingOrderByUserId(userId){
+    try {
+        console.log("this is the userId");
+        console.log(userId);
+        const {rows} = await client.query(`
+            SELECT * from orders
+            WHERE "userId" = $1
+            AND status='pending';
+        `,[userId]);
+        
+        console.log("This is the row in the async function");
+        console.log(rows);
+
+       if(rows.length == 1)
+       {
+        return rows[0];
+       }
+       else if(rows)
+       {
+        return rows;
+       }
+       else
+       {
+        return undefined;
+       }
+        
+       
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 async function getOrderByUserId(userId){
     try {
         const {rows} = await client.query(`
@@ -304,10 +330,11 @@ module.exports = {
     createNewUserOrder, 
     getOrders,
     getOrdersById,
-    getPendingOrdersByUser,
+    getAllOrdersByUser,
     updateOrders,
     destroyOrders,
-    getOrderByUserId,
+    getPendingOrderByUserId,
     finishOrder,
     getEntireCartByUserId,
+    getOrderByUserId
 }
