@@ -17,7 +17,9 @@ const {requireUser} = require('./utils')
 
 const {
     createOrders,
-    createNewUserOrder
+    createNewUserOrder,
+    getOrderByUserId,
+    getPendingOrdersByUser
 } = require('../db/orders');
 
 userRouter.post("/register", async (req, res, next) => {
@@ -104,11 +106,14 @@ userRouter.post("/login", async (req, res) => {
 
 userRouter.get("/me", requireUser, async (req, res) => {
     const {username, id} = req.user
-    console.log(username)
-    console.log(id)
-
+    console.log("req.user")
+    console.log(req.user)
+    // console.log(username)
+    // console.log(id)
+    
     try { 
-        res.send({username, id})
+        const order = await getPendingOrdersByUser(id)
+        res.send({username, id, orders: order})
     } catch (error) {
         res.send(error).status(505)
     }
