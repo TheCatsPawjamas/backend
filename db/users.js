@@ -79,16 +79,16 @@ async function getUserById(userId) {
 
 async function getUserByUsername(userName) {
     try {
-        console.log("username in getUserByUsername");
-        console.log(userName);
+        // console.log("username in getUserByUsername");
+        // console.log(userName);
         const {rows} = await client.query(`
             SELECT id, username, password 
             FROM users
             WHERE username=$1;
         `, [userName])
 
-        console.log("rows for getUserByUsername");
-        console.log(rows);
+        // console.log("rows for getUserByUsername");
+        // console.log(rows);
         return rows[0];
         // if(rows){
         //     return rows[0];

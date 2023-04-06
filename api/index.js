@@ -39,7 +39,7 @@ apiRouter.use(async(req,res,next)=>{
             if(username){
                 console.log("top of the if statement in the try block");
                 req.user = await getUserByUsername(username);
-                // console.log("Logging req.user" + req.user);
+                console.log("Logging req.user" + req.user);
                 next();
             }
         } catch ({name, message}) {

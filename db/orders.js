@@ -100,16 +100,22 @@ async function getOrdersById(id) {
 // }
 // what about getAllPendingOrders() 
 
-async function getAllOrdersByUser(userId) {
+async function getPendingOrdersByUser(userId) {
     try {
         console.log("This is the userId in the getAllOrdersByUser functions")
         console.log(userId);
         
         
+    // const {rows} = await client.query(`
+    // SELECT * FROM orders
+    // WHERE "userId"=$1
+    // AND status='pending';
+    // `,[userId]);
+
     const {rows} = await client.query(`
-    SELECT * FROM orders
-    WHERE "userId"=$1;
-    `[userId]);
+    SELECT * FROM orders;
+    `);
+
 
     console.log(rows);
 
@@ -298,7 +304,7 @@ module.exports = {
     createNewUserOrder, 
     getOrders,
     getOrdersById,
-    getAllOrdersByUser,
+    getPendingOrdersByUser,
     updateOrders,
     destroyOrders,
     getOrderByUserId,
