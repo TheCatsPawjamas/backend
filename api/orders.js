@@ -1,7 +1,7 @@
 const express = require("express");
 const { 
     getOrdersById,
-    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId } = require("../db/orders");
+    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId, getPendingOrderByUserId,getOrderByUserId } = require("../db/orders");
 
 const ordersRouter = express.Router();
 const bcrypt = require('bcrypt');
@@ -25,6 +25,29 @@ ordersRouter.get('/', async (req, res, next) => {
     } catch(error) {
         console.log(error)
     }
+})
+
+//get a users pending order by userId    -> This is the new router
+ordersRouter.get('/cart/:userId', requireUser, async(req,res,next)=>{
+    const user=req.user;
+    const userId = req.params.userId
+    try {
+        if(user){
+            const myOrder = await getPendingOrderByUserId(userId);
+            res.send(myOrder);
+        }else{
+            res.send({
+                name: "Missing orders",
+                message: "must create an order to see it"
+            }).status(204);
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
 })
 
 //gets your specific order by the id primary key of the orders table AND the purchase ID for that cart AND all the cats associated with that order
