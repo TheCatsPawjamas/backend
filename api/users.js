@@ -13,6 +13,8 @@ const {
     // getAllPurchasesByUsers, // we don't have this function in the purchases db
 } = require("../db/users.js")
 
+const {requireUser} = require('./utils')
+
 const {
     createOrders,
     createNewUserOrder
@@ -100,8 +102,8 @@ userRouter.post("/login", async (req, res) => {
     }
 })
 
-userRouter.get("/me", async (req, res) => {
-    const {username, id} = req.body
+userRouter.get("/me", requireUser, async (req, res) => {
+    const {username, id} = req.user
     console.log(username)
     console.log(id)
 
