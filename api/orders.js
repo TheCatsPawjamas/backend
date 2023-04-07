@@ -87,9 +87,18 @@ ordersRouter.post('/:orderId/cats',requireUser, async (req, res, next) => {
 
         const addCatToOrder = await addCatsToOrders({ catId, orderId, adoptionFee });
         if(addCatToOrder){
-            const theCatAdded = await getCatById(catId);
+            const theOrder = await getOrdersById(orderId);
+            const theCatAdded = theOrder.cats.filter((singleCat)=>{
+                if(catId == singleCat.catId){
+                    return true;
+                }else{
+                    return false;
+                }
+            })
+            
+            // const theCatAdded = theOrder.cats.pop();
             if (theCatAdded) {
-                res.send(theCatAdded).status(200);
+                res.send(theCatAdded[0]).status(200);
             } else {
                 res.send(error);
             };
