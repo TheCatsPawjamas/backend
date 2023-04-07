@@ -38,7 +38,7 @@ async function deletePurchases(id) {
         const removePurchase = await getPurchasesById(id)
         client.query(`
         DELETE FROM "purchases"
-        WHERE id = ${id}
+        WHERE "catId" = ${id}
         `)
 
         return removePurchase;
