@@ -47,7 +47,7 @@ async function getPurchasesByCatId(catId){
 async function deletePurchases(catId, orderId) {
     try {
         const removePurchase = await getPurchasesByCatId(catId)
-        client.query(`
+        await client.query(`
         DELETE FROM "purchases"
         WHERE "catId" = ${catId}
         AND "orderId"=${orderId};
