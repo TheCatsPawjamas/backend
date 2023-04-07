@@ -7,6 +7,7 @@ const {
     deletePurchases
 } = require("../db/purchases");
 const { getUserById } = require("../db/users");
+const { requireUser } = require("./utils");
 
 const purchasesRouter = express.Router();
 
@@ -55,12 +56,12 @@ purchasesRouter.patch("/:id", async (req, res) => {
     }
 })
 
-//Deletes a cat from a purchase, deletes it from the cart as well.... based on the actual id primary key in the purchases table
-purchasesRouter.delete("/:id", async (req, res) => {
-    const id = req.params.id;
-    console.log(id);
+//Deletes a cat from a purchase, deletes it from the cart as well.... based on the catId in the purchases table
+purchasesRouter.delete("/:catId",requireUser, async (req, res) => {
+    const catId = req.params.catId;
+    console.log(catId);
     try {
-        const destroyPurchase = await deletePurchases(id)
+        const destroyPurchase = await deletePurchases(catId)
         res.send({
             success: true,
             destroyPurchase
