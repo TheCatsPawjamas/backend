@@ -1,4 +1,5 @@
-const express = require("express")
+const express = require("express");
+const { destroyOrders } = require("../db");
 
 const {
     addCatsToOrder, 
@@ -56,16 +57,26 @@ purchasesRouter.patch("/:id", async (req, res) => {
     }
 })
 
-//Deletes a cat from a purchase, deletes it from the cart as well.... based on the catId in the purchases table
-purchasesRouter.delete("/:catId",requireUser, async (req, res) => {
+//Deletes a cat from a purchase, deletes it from the cart as well.... based on the catId in the purchases table and OrderId
+purchasesRouter.delete("/:catId/:orderId",requireUser, async (req, res) => {
     const catId = req.params.catId;
+    const orderId = req.params.orderId;
     console.log(catId);
+    console.log(orderId);
     try {
-        const destroyPurchase = await deletePurchases(catId)
-        res.send({
-            success: true,
-            destroyPurchase
-        })
+        const destroyPurchase = await deletePurchases(catId,orderId)
+        console.log(destroyPurchase)
+        if(destroyPurchase){
+            res.send({
+                success: true,
+                destroyPurchase
+            })
+        }else{
+            res.send({
+                success: false
+            })
+        }
+
     } catch (error) {
         console.log(error)
         res.status(500).json({

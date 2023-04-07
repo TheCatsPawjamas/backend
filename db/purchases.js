@@ -23,7 +23,7 @@ async function getPurchasesById(id){
     try {
         const {rows} = await client.query(`
         SELECT * FROM "purchases"
-        WHERE id = $1 
+        WHERE id = $1; 
         `,[id])
 
         return rows[0]
@@ -31,14 +31,26 @@ async function getPurchasesById(id){
         console.log(error)
     }
 }
-
-// delete a purchase 
-async function deletePurchases(id) {
+async function getPurchasesByCatId(catId){ 
     try {
-        const removePurchase = await getPurchasesById(id)
+        const {rows} = await client.query(`
+        SELECT * FROM "purchases"
+        WHERE "catId" = $1; 
+        `,[catId])
+
+        return rows[0]
+    } catch (error) {
+        console.log(error)
+    }
+}
+// delete a purchase 
+async function deletePurchases(catId, orderId) {
+    try {
+        const removePurchase = await getPurchasesByCatId(catId)
         client.query(`
         DELETE FROM "purchases"
-        WHERE "catId" = ${id}
+        WHERE "catId" = ${catId}
+        AND "orderId"=${orderId};
         `)
 
         return removePurchase;
