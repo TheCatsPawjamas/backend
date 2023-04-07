@@ -13,7 +13,8 @@ const {
     getOrders,
     getAllOrdersByUser,
     createOrders,
-    addCatsToOrders
+    addCatsToOrders,
+    getCatById
 } = require('../db');
 
 //gets all orders, this should be an admin function... will work on it for the next code review
@@ -78,18 +79,23 @@ ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
 })
 
 //Adds a cat to a specific order by the orderId, have to input the catId and adoptionFee
-ordersRouter.post('/:orderId/cats', async (req, res, next) => {
+ordersRouter.post('/:orderId/cats',requireUser, async (req, res, next) => {
     const orderId = req.params.orderId;
     const { catId, adoptionFee } = req.body;
+    const user = req.user;
     try {
-         
-        const addCatToOrder = await addCatsToOrders({ catId, orderId, adoptionFee });
 
-        if (addCatToOrder) {
-            res.send(addCatToOrder).status(200);
-        } else {
-            res.send(error);
-        };
+        const addCatToOrder = await addCatsToOrders({ catId, orderId, adoptionFee });
+        if(addCatToOrder){
+            const theCatAdded = await getCatById(catId);
+            if (theCatAdded) {
+                res.send(theCatAdded).status(200);
+            } else {
+                res.send(error);
+            };
+        }
+
+
     } catch (error) {
         console.log(error)
     }

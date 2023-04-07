@@ -5,11 +5,11 @@ const cors = require('cors');
 const morgan = require('morgan');
 
 const {client} = require('./db/client');
-
+server.use(cors());
 server.use(morgan('dev'));
 
 server.use(express.json());
-server.use(cors());
+
 
 server.use((req, res, next) => {
     console.log("<____Body Logger START____>");
