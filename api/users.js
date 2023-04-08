@@ -105,7 +105,7 @@ userRouter.post("/login", async (req, res) => {
 })
 
 userRouter.get("/me", requireUser, async (req, res) => {
-    const {username, id} = req.user
+    const {username, id, admin} = req.user
     console.log("req.user")
     console.log(req.user)
     // console.log(username)
@@ -113,7 +113,7 @@ userRouter.get("/me", requireUser, async (req, res) => {
     
     try { 
         
-        res.send({username, id})
+        res.send({username, id, admin})
     } catch (error) {
         res.send(error).status(505)
     }
