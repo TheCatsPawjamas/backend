@@ -124,10 +124,43 @@ async function updateUserById({id, fields={}}){
     }
 
 }
+//for admin page
+async function getAllUsers() {
+    try {
+        const { rows } = await client.query(`
+          SELECT * from users;
+        `);
+    
+        return rows;
+
+      } catch (error) {
+        throw error;
+      }
+}
+//for admin page
+async function deleteUserByUsername(username){
+    try {
+        const user = await getUserByUsername(username);
+        const { rows } = await client.query(`
+        DELETE FROM users
+        WHERE username=$1
+        RETURNING *;
+      `,[username]);
+
+      return user;
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
   createUser,
   getUser,
   getUserById,
   getUserByUsername,
   updateUserById,
+  getAllUsers,
+  deleteUserByUsername
 }

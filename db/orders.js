@@ -247,6 +247,36 @@ async function getPendingOrderByUserId(userId){
         throw error;
     }
 }
+//for profile page seeing all finished orders.
+async function getAllFinishedOrdersByUserId(userId){
+    try {
+        console.log(userId);
+        const {rows} = await client.query(`
+            SELECT * from orders
+            WHERE "userId" = $1
+            AND status='submitted';
+        `,[userId]);
+        
+       if(rows.length == 1)
+       {
+        return rows[0];
+       }
+       else if(rows)
+       {
+        return rows;
+       }
+       else
+       {
+        return undefined;
+       }
+        
+       
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 async function getOrderByUserId(userId){
     try {
         const {rows} = await client.query(`
@@ -336,5 +366,6 @@ module.exports = {
     getPendingOrderByUserId,
     finishOrder,
     getEntireCartByUserId,
-    getOrderByUserId
+    getOrderByUserId,
+    getAllFinishedOrdersByUserId
 }

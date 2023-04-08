@@ -1,7 +1,7 @@
 const express = require("express");
 const { 
     getOrdersById,
-    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId, getPendingOrderByUserId,getOrderByUserId } = require("../db/orders");
+    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId, getPendingOrderByUserId,getOrderByUserId, getAllFinishedOrdersByUserId } = require("../db/orders");
 
 const ordersRouter = express.Router();
 const bcrypt = require('bcrypt');
@@ -201,6 +201,30 @@ ordersRouter.post('/purchaseComplete', requireUser, async(req,res,next)=>{
         console.log(error);
         throw error;
     }
+})
+
+
+//be able to get all finished orders by a certain user
+ordersRouter.get('/finishedOrder/:userId', requireUser, async(req,res,next)=>{
+    const user=req.user;
+    const userId = req.params.userId
+    try {
+        if(user){
+            const myOrders = await getAllFinishedOrdersByUserId(userId);
+            res.send(myOrders);
+        }else{
+            res.send({
+                name: "Missing orders",
+                message: "must create an order to see it"
+            }).status(204);
+        }
+
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
 })
 
 
