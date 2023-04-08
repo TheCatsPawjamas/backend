@@ -10,10 +10,12 @@ const {
     getUserById,
     getUserByUsername,
     updateUserById,
+    getAllUsers,
+    deleteUserByUsername,
     // getAllPurchasesByUsers, // we don't have this function in the purchases db
 } = require("../db/users.js")
 
-const {requireUser} = require('./utils')
+const {requireUser, requireAdmin} = require('./utils')
 
 const {
     createOrders,
@@ -173,6 +175,93 @@ userRouter.patch("/:id", async (req, res) => {
         res.send({
             success : false,
             error : {
+                name: 'InvalidUser',
+                message : 'You need to enter a valid username, password or email'
+            },
+            data : null
+        })
+    }
+})
+
+
+//all of the bellow routers are for admin users
+
+//get all users
+userRouter.get('/admin', requireAdmin, async(req,res,next)=>{
+    try {
+        const allUsers = await getAllUsers();
+
+        res.send(allUsers);
+
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+
+})
+
+//delete a user
+userRouter.delete('/admin/:id', requireAdmin, async(req,res)=>{
+    const id = req.params.id
+    try {
+        const userToBeDeleted = await getUserById(id);
+        if(userToBeDeleted){
+            const deleted = await deleteUserByUsername(userToBeDeleted.username);
+            console.log(userToBeDeleted);
+            console.log(deleted);
+            res.send(userToBeDeleted);
+
+        }else{
+            res.send({
+                success : false,
+                error : {
+                    name: 'InvalidUser',
+                    message : 'You need to enter a valid username, password or email'
+                },
+                data : null
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+})
+
+//update a user
+userRouter.patch("/admin/:id",requireAdmin, async (req, res) => {
+    const {id} = req.params 
+    console.log("params:" + " " + id)
+    const {username,password,email} = req.body;
+    const user = await getUserById(id)
+    if(user){
+        const updateFields = {};
+        let hashedPassword='';
+        let hashedEmail = '';
+        if (username) {
+            updateFields.username = username;
+        }
+        if (password) {
+            const saltCount=12;
+            hashedPassword = await bcrypt.hash(password,saltCount);
+            updateFields.password = hashedPassword;
+        }
+        if (email) {
+            const saltCount = 12;
+            hashedEmail= await bcrypt.hash(email,saltCount);
+          updateFields.email = hashedEmail;
+        }
+    
+        try {
+            const updatedUser = await updateUserById({id, fields: updateFields});
+            console.log("done");
+            res.send(updatedUser).status(200);
+        } catch (error) {
+            res.send(error).status(505)
+        }
+    }else{
+        res.send({
+            success : false,
+            error : {
                 name: 'InvalidUSer',
                 message : 'You need to enter a valid username, password or email'
             },
@@ -180,5 +269,6 @@ userRouter.patch("/:id", async (req, res) => {
         })
     }
 })
+
 
 module.exports = userRouter
