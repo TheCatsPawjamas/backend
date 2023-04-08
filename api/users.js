@@ -45,6 +45,7 @@ userRouter.post("/register", async (req, res, next) => {
                 message: "Username already exists, please try again "
             })
         }else{
+            
             // if (password.length < 8) {
             //     return res.status(400).json({
             //       message: "Password must be at least 8 characters"
