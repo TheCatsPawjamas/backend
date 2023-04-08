@@ -142,8 +142,142 @@ async function createInitialUsers() {
             outdoor: false,
             adoptionFee: 600,
             imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Ragdoll_240x240%20%281%29.jpg?itok=NuWXBB9T"   
+        },
+        {
+          name: "Kylo Ren",
+          breed: "Balinese-Javanese",
+          age: "2",
+          temperament: "Affectionate and Talkative",
+          outdoor: false,
+          adoptionFee: 800,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Javanese_body_6.jpg?itok=HDaIyrJN"   
+        },
+        {
+          name: "Marie",
+          breed: "Chartreux",
+          age: "3",
+          temperament: "Loving and Playful",
+          outdoor: true,
+          adoptionFee: 400,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Chartruese_body_6.jpg?itok=-1f4kRHH"   
+        },
+        {
+          name: "Dryer Lint",
+          breed: "Cornish Rex",
+          age: "1",
+          temperament: "Active and Mischievous",
+          outdoor: false,
+          adoptionFee: 600,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/CornishRex_body_7.jpg?itok=E0NJBg64"   
+        },
+        {
+          name: "Franklin",
+          breed: "Himalayan",
+          age: "2",
+          temperament: "Sweet and Cuddly",
+          outdoor: false,
+          adoptionFee: 800,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Himilayan_body_6.jpg?itok=VNb53gh8"   
+        },
+        {
+          name: "Tiny",
+          breed: "Maine Coon",
+          age: "4",
+          temperament: "Gentle and Friendly",
+          outdoor: false,
+          adoptionFee: 900,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/MaineCoon_body_7.jpg?itok=1WyLfNDu"   
+        },
+        {
+          name: "Aragorn",
+          breed: "Norwegian Forest Cat",
+          age: "2",
+          temperament: "Gentle and Athletic",
+          outdoor: true,
+          adoptionFee: 600,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/NorwegianForestCat_body_6.jpg?itok=oyveyl95"   
+        },
+        {
+          name: "Smeagol",
+          breed: "Peterbald",
+          age: "3",
+          temperament: "Intelligent and Social",
+          outdoor: false,
+          adoptionFee: 700,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Peterbald_body_6.jpg?itok=uDwMZ7SK"   
+        },
+        {
+          name: "Crumpet",
+          breed: "Ragamuffin",
+          age: "2",
+          temperament: "Sweet and Loving",
+          outdoor: false,
+          adoptionFee: 500,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/RagaMuffin_body_7.jpg?itok=_Xi-6ntW"   
+        },
+        {
+          name: "Blueberry",
+          breed: "Russian Blue",
+          age: "1",
+          temperament: "Gentle and Quiet",
+          outdoor: false,
+          adoptionFee: 600,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/RussianBlue_body_7.jpg?itok=2R8ZUJwV"   
+        },
+        {
+          name: "Angus",
+          breed: "Scottish Fold",
+          age: "3",
+          temperament: "Intelligent and Playful",
+          outdoor: false,
+          adoptionFee: 700,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/SchottishFoldLH_body_7.jpg?itok=CFR7z3LM"   
+        },
+        {
+          name: "Blotch",
+          breed: "Savannah",
+          age: "1",
+          temperament: "Loyal and Adventurous",
+          outdoor: true,
+          adoptionFee: 800,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Savannah_body_7.jpg?itok=hmp0_c1v"   
+        },
+        {
+          name: "Teddy",
+          breed: "Selkirk Rex",
+          age: "4",
+          temperament: "Friendly and Social",
+          outdoor: false,
+          adoptionFee: 600,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/SelkirkRex_body_7.jpg?itok=NdVIkFaq"   
+        },
+        {
+          name: "Jabba",
+          breed: "Singapura",
+          age: "5",
+          temperament: "Playful and Extroverted",
+          outdoor: true,
+          adoptionFee: 400,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Singapura_body_7.jpg?itok=8I234gZj"   
+        },
+        {
+          name: "Tony",
+          breed: "Toyger",
+          age: "3",
+          temperament: "Intelligent and Outgoing",
+          outdoor: true,
+          adoptionFee: 500,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Toyger_body_7.jpg?itok=XZd4UW7n"   
+        },
+        {
+          name: "Ash",
+          breed: "Turkish Angora",
+          age: "2",
+          temperament: "Active and Playful",
+          outdoor: false,
+          adoptionFee: 600,
+          imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/TurkishAngora_body_7.jpg?itok=wDtFZLqW"   
         }
-
       ]
       const cats = await Promise.all(catsToCreate.map(createCats))
   
