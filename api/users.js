@@ -231,7 +231,7 @@ userRouter.delete('/admin/:id', requireAdmin, async(req,res)=>{
 userRouter.patch("/admin/:id",requireAdmin, async (req, res) => {
     const {id} = req.params 
     console.log("params:" + " " + id)
-    const {username,password,email} = req.body;
+    const {username,password,email, admin} = req.body;
     const user = await getUserById(id)
     if(user){
         const updateFields = {};
@@ -249,6 +249,9 @@ userRouter.patch("/admin/:id",requireAdmin, async (req, res) => {
             const saltCount = 12;
             hashedEmail= await bcrypt.hash(email,saltCount);
           updateFields.email = hashedEmail;
+        }
+        if(admin){
+            updateFields.admin=admin;
         }
     
         try {
