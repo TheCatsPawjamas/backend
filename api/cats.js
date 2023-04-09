@@ -51,7 +51,7 @@ cats.post('/', requireAdmin, async (req, res) => {
   
 
 // PATCH /api/cats/:catId
-cats.patch('/:catId',requireAdmin,async (req, res, next) => {
+cats.patch('/:catId',async (req, res, next) => {
     const id = req.params.catId;
     const { name, breed, age, temperament, outdoor, adoptionFee, imageURL  } = req.body;
     console.log(id);
@@ -103,7 +103,7 @@ cats.patch('/:catId',requireAdmin,async (req, res, next) => {
 
 
 // DELETE /api/cats/:catId
-cats.delete('/:catId', requireAdmin,async (req, res) => {
+cats.delete('/:catId',async (req, res) => {
     try {
       const id = req.params.catId;
       const deletedCat = await deleteCatById(id);
