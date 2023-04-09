@@ -1,6 +1,7 @@
 const {client} = require("./client");
 
 const bcrypt = require("bcrypt"); 
+const { getAllOrdersByUser } = require("./orders");
 
 // database functions
 
@@ -141,6 +142,14 @@ async function getAllUsers() {
 async function deleteUserByUsername(username){
     try {
         const user = await getUserByUsername(username);
+        const userId = user.id
+        const usersOrders = await getAllOrdersByUser(userId);
+
+        await client.query(`
+            DELETE FROM orders
+            WHERE "userId"=$1;
+        `,[userId])
+
         const { rows } = await client.query(`
         DELETE FROM users
         WHERE username=$1
