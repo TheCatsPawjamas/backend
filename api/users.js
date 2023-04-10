@@ -24,15 +24,21 @@ const {
     getAllOrdersByUser
 } = require('../db/orders');
 
+userRouter.use( (req, res, next) => {
+    console.log("entered the user router")
+
+    next()
+})
+
 userRouter.post("/register", async (req, res, next) => {
     try {
         const {username, password, email} = req.body
-        console.log(username);
+        // console.log(username);
         const userExists = await getUserByUsername(username)
-        console.log("userExists");
+        // console.log("userExists");
         let admin = false;
         if(req.body.admin){
-            console.log(req.body.admin);
+            // console.log(req.body.admin);
             if(req.body.admin == "true"){
                 admin = true;
             }else{
@@ -41,7 +47,7 @@ userRouter.post("/register", async (req, res, next) => {
             
         }
 
-        console.log(userExists);
+        // console.log(userExists);
         if (userExists) {
             res.send({
                 message: "Username already exists, please try again "
@@ -58,9 +64,9 @@ userRouter.post("/register", async (req, res, next) => {
             //     });
             // }
 
-            console.log("creating user:" + username + " " + password)
+            // console.log("creating user:" + username + " " + password)
             const user = await createUser ({ username, password, email, admin});
-            console.log("created user", user)
+            // console.log("created user", user)
             const ourUser = await getUser({username, password, email});
 
             const id = user.id;
@@ -109,8 +115,8 @@ userRouter.post("/login", async (req, res) => {
 
 userRouter.get("/me", requireUser, async (req, res) => {
     const {username, id, admin} = req.user
-    console.log("req.user")
-    console.log(req.user)
+    // console.log("req.user")
+    // console.log(req.user)
     // console.log(username)
     // console.log(id)
     
@@ -124,7 +130,7 @@ userRouter.get("/me", requireUser, async (req, res) => {
 
 userRouter.get("/:username/purchases", async (req, res) => {
     const {username} = req.params 
-    console.log("params:" + " " + username)
+    // console.log("params:" + " " + username)
 
     try {
         const user = await getUser({username})
@@ -143,7 +149,7 @@ userRouter.get("/:username/purchases", async (req, res) => {
 })
 userRouter.patch("/:id", async (req, res) => {
     const {id} = req.params 
-    console.log("params:" + " " + id)
+    // console.log("params:" + " " + id)
     const {username,password,email} = req.body;
     const user = await getUserById(id)
     if(user){
@@ -166,7 +172,7 @@ userRouter.patch("/:id", async (req, res) => {
     
         try {
             const updatedUser = await updateUserById({id, fields: updateFields});
-            console.log("done");
+            // console.log("done");
             res.send(updatedUser).status(200);
         } catch (error) {
             res.send(error).status(505)
@@ -207,8 +213,8 @@ userRouter.delete('/admin/:id', requireAdmin, async(req,res)=>{
         const userToBeDeleted = await getUserById(id);
         if(userToBeDeleted){
             const deleted = await deleteUserByUsername(userToBeDeleted.username);
-            console.log(userToBeDeleted);
-            console.log(deleted);
+            // console.log(userToBeDeleted);
+            // console.log(deleted);
             res.send(userToBeDeleted);
 
         }else{
@@ -229,6 +235,7 @@ userRouter.delete('/admin/:id', requireAdmin, async(req,res)=>{
 
 //update a user
 userRouter.patch("/admin/:id",requireAdmin, async (req, res) => {
+    console.log("successfull request to admin")
     const {id} = req.params 
     console.log("params:" + " " + id)
     const {username,password,email, admin} = req.body;
@@ -253,7 +260,8 @@ userRouter.patch("/admin/:id",requireAdmin, async (req, res) => {
         if(admin){
             updateFields.admin=admin;
         }
-    
+        console.log(updateFields)
+        console.log("this is update fields")
         try {
             const updatedUser = await updateUserById({id, fields: updateFields});
             console.log("done");
