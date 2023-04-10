@@ -208,10 +208,22 @@ ordersRouter.post('/purchaseComplete', requireUser, async(req,res,next)=>{
 ordersRouter.get('/finishedOrder/:userId', requireUser, async(req,res,next)=>{
     const user=req.user;
     const userId = req.params.userId
+
     try {
         if(user){
             const myOrders = await getAllFinishedOrdersByUserId(userId);
-            res.send(myOrders);
+            const allFinishedOrders = await Promise.all(myOrders.map(async (singleOrder)=>{
+                    const myFinishedOrders = await getOrdersById(singleOrder.id);
+                    // console.log("MyfinishedOrders");
+                    // console.log(myFinishedOrders);
+                    return myFinishedOrders;
+            }));
+            // const submittedOrders =  Promise.resolve(allFinishedOrders);
+            // console.log("This is submittedOrders");
+            // console.log(submittedOrders);
+            console.log("This is allFinishedOrders");
+            console.log(allFinishedOrders);
+            res.send(allFinishedOrders);
         }else{
             res.send({
                 name: "Missing orders",
