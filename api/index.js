@@ -26,20 +26,20 @@ apiRouter.use(async(req,res,next)=>{
     if(!auth){
         next();
     }else if(auth.startsWith(prefix)){
-        console.log("TOP of else-if block");
+        // console.log("TOP of else-if block");
         const token = auth.slice(prefix.length);
-        console.log("This is your token: " + token);
+        // console.log("This is your token: " + token);
         // console.log(token);
         try {
-            console.log("top of the try block");
+            // console.log("top of the try block");
             const jwtId = jwt.verify(token, JWT_SECRET);
             const {username} = jwtId;
             // console.log(jwtId);
-            console.log("username: " +username);
+            // console.log("username: " +username);
             if(username){
-                console.log("top of the if statement in the try block");
+                // console.log("top of the if statement in the try block");
                 req.user = await getUserByUsername(username);
-                console.log("Logging req.user" + req.user);
+                // console.log("Logging req.user" + req.user);
                 next();
             }
         } catch ({name, message}) {
