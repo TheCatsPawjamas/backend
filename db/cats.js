@@ -71,7 +71,13 @@ async function updateCat({ id, fields= {} }) {
 
 async function deleteCatById(id) {
     try {
-      const deletedCat = await client.query(`DELETE FROM cats WHERE id=$1 RETURNING *`, [id]);
+
+        await client.query(`
+            DELETE FROM purchases
+            WHERE "catId"=$1;
+        `,[id])
+
+      const deletedCat = await client.query(`DELETE FROM cats WHERE id=$1 RETURNING *;`, [id]);
       return deletedCat.rowCount;
     } catch (error) {
       console.log(error);
