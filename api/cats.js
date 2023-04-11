@@ -11,9 +11,7 @@ const cats = express.Router();
 // GET /api/cats
 cats.get('/', async (req, res) => {
     try {
-        console.log("Starting to fetch cats")
         const allCats = await getAllCats();
-        console.log("Finished fetching cats")
         res.send(allCats)
     } catch (error) {
         console.log(error)
@@ -54,7 +52,6 @@ cats.post('/', requireAdmin, async (req, res) => {
 cats.patch('/:catId',async (req, res, next) => {
     const id = req.params.catId;
     const { name, breed, age, temperament, outdoor, adoptionFee, imageURL  } = req.body;
-    console.log(id);
     const user = req.user;
     if(user){
         const updateFields = {};
@@ -81,9 +78,7 @@ cats.patch('/:catId',async (req, res, next) => {
           updateFields.imageURL = imageURL;
         }
         try {
-            console.log(updateFields);
             const updatedCat = await updateCat({id, fields: updateFields});
-            console.log("done");
             res.send(updatedCat);
         } catch ({ name, message }) {
             next({ name, message });
@@ -107,7 +102,6 @@ cats.delete('/:catId',async (req, res) => {
     try {
       const id = req.params.catId;
       const deletedCat = await deleteCatById(id);
-      console.log(deletedCat);
       if (deletedCat === 0) {
         res.status(404).json({ message: `Cat with id ${id} not found` });
       } else {

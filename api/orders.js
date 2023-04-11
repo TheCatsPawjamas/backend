@@ -1,7 +1,7 @@
 const express = require("express");
 const { 
     getOrdersById,
-    updateOrders, destroyOrders, finishOrder, getEntireCartByUserId, getPendingOrderByUserId,getOrderByUserId, getAllFinishedOrdersByUserId } = require("../db/orders");
+    updateOrders, finishOrder, getEntireCartByUserId, getPendingOrderByUserId,getOrderByUserId, getAllFinishedOrdersByUserId } = require("../db/orders");
 
 const ordersRouter = express.Router();
 const bcrypt = require('bcrypt');
@@ -11,17 +11,13 @@ const {requireUser} = require('./utils');
 
 const {
     getOrders,
-    getAllOrdersByUser,
-    createOrders,
-    addCatsToOrders,
-    getCatById
+    addCatsToOrders
 } = require('../db');
 
 //gets all orders, this should be an admin function... will work on it for the next code review
 ordersRouter.get('/', async (req, res, next) => {
     try {
         let allOrders = await getOrders();
-        console.log(allOrders);
         res.send(allOrders);
     } catch(error) {
         console.log(error)
@@ -54,15 +50,10 @@ ordersRouter.get('/cart/:userId', requireUser, async(req,res,next)=>{
 //gets your specific order by the id primary key of the orders table AND the purchase ID for that cart AND all the cats associated with that order
 ordersRouter.get('/:id', requireUser,async (req,res,next)=>{
     const id = req.params.id;
-    console.log(id);
     const user = req.user;
     const userId = user.id
-    console.log(user);
-    console.log(userId);
     try {
         const myOrders = await getOrdersById(id);
-        console.log("this is myOrders variable");
-        console.log(myOrders);
         if(myOrders){
             res.send(myOrders).status(200);
         }
@@ -121,26 +112,21 @@ ordersRouter.patch('/:id',requireUser, async (req,res,next)=>{
     if(creditCardName){
         let hashedCardName = await bcrypt.hash(creditCardName,saltCount)
         orderData.creditCardName= hashedCardName;
-        // orderData.creditCardName = creditCardName;
     }
     if(creditCard){
         let creditCardString = creditCard.toString();
         let hashedCardNum = await bcrypt.hash(creditCardString,saltCount);
         orderData.creditCard = hashedCardNum;
-        // orderData.creditCard = creditCard;
     }
     if(creditCardExpirationDate){
-        // let creditCardExpDateString = creditCardExpirationDate.toString
         let hashedCardDate = await bcrypt.hash(creditCardExpirationDate,saltCount);
         orderData.creditCardExpirationDate=hashedCardDate;
-        // orderData.creditCardExpirationDate=creditCardExpirationDate;
 
     }
     if(creditCardCVC){
         let creditCardCVCString = creditCardCVC.toString();
         let hashedCardCVC = await bcrypt.hash(creditCardCVCString,saltCount);
         orderData.creditCardCVC = hashedCardCVC;
-        // orderData.creditCardCVC = creditCardCVC;
     }
 
     try {
@@ -214,15 +200,8 @@ ordersRouter.get('/finishedOrder/:userId', requireUser, async(req,res,next)=>{
             const myOrders = await getAllFinishedOrdersByUserId(userId);
             const allFinishedOrders = await Promise.all(myOrders.map(async (singleOrder)=>{
                     const myFinishedOrders = await getOrdersById(singleOrder.id);
-                    // console.log("MyfinishedOrders");
-                    // console.log(myFinishedOrders);
                     return myFinishedOrders;
             }));
-            // const submittedOrders =  Promise.resolve(allFinishedOrders);
-            // console.log("This is submittedOrders");
-            // console.log(submittedOrders);
-            console.log("This is allFinishedOrders");
-            console.log(allFinishedOrders);
             res.send(allFinishedOrders);
         }else{
             res.send({

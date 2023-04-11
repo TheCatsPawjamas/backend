@@ -3,7 +3,6 @@ const {client} = require("./client");
 const bcrypt = require("bcrypt"); 
 const { getAllOrdersByUser } = require("./orders");
 
-// database functions
 
 // user functions
 async function createUser({ username, password, email, admin }) {
@@ -39,7 +38,6 @@ async function getUser({ username, password, email }) {
         }
     
         const user = rows[0];
-        // const saltCount = 12;
         const hashedPassword = user.password;
         const hashedEmail = user.email;
     
@@ -80,23 +78,13 @@ async function getUserById(userId) {
 
 async function getUserByUsername(userName) {
     try {
-        // console.log("username in getUserByUsername");
-        // console.log(userName);
         const {rows} = await client.query(`
             SELECT id, username, password, admin 
             FROM users
             WHERE username=$1;
         `, [userName])
 
-        // console.log("rows for getUserByUsername");
-        // console.log(rows);
         return rows[0];
-        // if(rows){
-        //     return rows[0];
-        // }
-        // else{
-        //     return undefined;
-        // }
     } catch (error) {
         console.log(error);
     }

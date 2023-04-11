@@ -29,7 +29,6 @@ purchasesRouter.patch("/:id", async (req, res) => {
     const id = req.params.id 
     const { catId, adoptionFee} = req.body
 
-    console.log(id);
     const user = await getUserById(id)
     if (user) {
         let updateFields = {};
@@ -41,7 +40,6 @@ purchasesRouter.patch("/:id", async (req, res) => {
         }
         try {
             const updatedPurchase = await updatePurchases({id, fields: updateFields});
-            console.log("starting to update purchase")
             res.send(updatedPurchase).status(200)
         } catch (error) {
             res.send(error).status(500)
@@ -61,11 +59,8 @@ purchasesRouter.patch("/:id", async (req, res) => {
 purchasesRouter.delete("/:catId/:orderId",requireUser, async (req, res) => {
     const catId = req.params.catId;
     const orderId = req.params.orderId;
-    console.log(catId);
-    console.log(orderId);
     try {
         const destroyPurchase = await deletePurchases(catId,orderId)
-        console.log(destroyPurchase)
         if(destroyPurchase){
             res.send({
                 success: true,
