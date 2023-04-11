@@ -1,6 +1,6 @@
 const {client} = require("./client");
 const { getPurchasesById } = require("./purchases");
-const { getUserById } = require("./users");
+// const { getUserById } = require("./users");
 // push later on
 
 async function createOrders({

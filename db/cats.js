@@ -2,7 +2,6 @@ const {client} = require("./client");
 
 async function createCats({name, breed, age, temperament, outdoor, adoptionFee, imageURL}) {
     try {
-        console.log("This is the image URL: " + imageURL);
         const {rows} = await client.query(`
         INSERT INTO cats(name, breed, age, temperament, outdoor, "adoptionFee", "imageURL")
         VALUES ($1, $2, $3, $4, $5, $6, $7)
