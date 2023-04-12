@@ -108,15 +108,6 @@ async function createInitialUsers() {
             imageURL: "https://www.purina.com/sites/default/files/styles/kraken_generic_max_width_480/public/Sphynx_body_7.jpg?itok=dlFrsTiE"
         },
         {
-            name: "Puss in Boots",
-            breed: "Golden British shorthair",
-            age: "20",
-            temperament: "Proud and Honorable",
-            outdoor: true,
-            adoptionFee: 10000,
-            imageURL: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC_noi0uPIq1iPf2668hGsqvl8kBh-_9ayIw&usqp=CAU"
-        },
-        {
             name: "Biscuit",
             breed: "American shorthair",
             age: "10",
