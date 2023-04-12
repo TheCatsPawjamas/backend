@@ -10,7 +10,7 @@ async function requireUser(req, res, next) {
 }
 
 async function requireAdmin(req, res, next) {
-  console.log(req.user)
+  
   if (req.user.admin==false) {
     next({
       name: "MissingAdminStatusError",
