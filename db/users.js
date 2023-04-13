@@ -132,11 +132,18 @@ async function deleteUserByUsername(username){
         const user = await getUserByUsername(username);
         const userId = user.id
         const usersOrders = await getAllOrdersByUser(userId);
+        usersOrders.map(async (singleOrder)=>{
+          await client.query(`
+          DELETE FROM purchases
+          WHERE "orderId"=$1       
+          `,[singleOrder.id])
+        })
 
         await client.query(`
             DELETE FROM orders
             WHERE "userId"=$1;
         `,[userId])
+
 
         const { rows } = await client.query(`
         DELETE FROM users

@@ -145,7 +145,6 @@ async function destroyOrders(id) {
 
 
 
-
 //helper function
 async function getPendingOrderByUserId(userId){
     try {
@@ -187,11 +186,8 @@ async function getAllFinishedOrdersByUserId(userId){
             AND status='submitted';
         `,[userId]);
         
-       if(rows.length == 1)
-       {
-        return rows[0];
-       }
-       else if(rows)
+
+       if(rows.length)
        {
         return rows;
        }
