@@ -198,11 +198,16 @@ ordersRouter.get('/finishedOrder/:userId', requireUser, async(req,res,next)=>{
     try {
         if(user){
             const myOrders = await getAllFinishedOrdersByUserId(userId);
-            const allFinishedOrders = await Promise.all(myOrders.map(async (singleOrder)=>{
-                    const myFinishedOrders = await getOrdersById(singleOrder.id);
-                    return myFinishedOrders;
-            }));
-            res.send(allFinishedOrders);
+            if(myOrders){
+                    const allFinishedOrders = await Promise.all(myOrders.map(async (singleOrder)=>{
+                        const myFinishedOrders = await getOrdersById(singleOrder.id);
+                        return myFinishedOrders;
+                }));
+                res.send(allFinishedOrders);
+            }else{
+                res.send({message: "No Orders"});
+            }
+
         }else{
             res.send({
                 name: "Missing orders",
